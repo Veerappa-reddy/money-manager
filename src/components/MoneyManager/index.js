@@ -24,7 +24,7 @@ class MoneyManager extends Component {
     historyList: [],
     userTitle: '',
     userAmount: '',
-    userType: transactionTypeOptions[0].displayText,
+    userType: transactionTypeOptions[0].optionId,
   }
 
   onChangeTitle = event => {
@@ -42,18 +42,24 @@ class MoneyManager extends Component {
   onAddAppointment = event => {
     event.preventDefault()
     const {userTitle, userAmount, userType} = this.state
+    const optionType = transactionTypeOptions.find(
+      eachOptionDetails => eachOptionDetails.optionId === userType,
+    )
+
+    const {displayText} = optionType
 
     const transaction = {
       id: v4(),
       title: userTitle,
       amount: parseInt(userAmount),
-      type: userType,
+      type: displayText,
     }
 
     this.setState(prevState => ({
       historyList: [...prevState.historyList, transaction],
       userTitle: '',
       userAmount: '',
+      userType: transactionTypeOptions[0].optionId,
     }))
   }
 

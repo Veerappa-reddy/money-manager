@@ -13,7 +13,7 @@ const MoneyDetails = props => {
         />
         <div className="name-container">
           <p className="your-balance">Your Balance</p>
-          <p className="display-amount" data-testid="incomeAmount">
+          <p className="display-amount" data-testid="balanceAmount">
             Rs {balance}
           </p>
         </div>
