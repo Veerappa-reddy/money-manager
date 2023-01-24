@@ -34,3 +34,9 @@
   padding-right: 40px;
   width: 200px;
 }
+.income-color {
+  color: green;
+}
+.expense-color {
+  color: red;
+}

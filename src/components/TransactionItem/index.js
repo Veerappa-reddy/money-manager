@@ -1,6 +1,6 @@
 import './index.css'
 
-const AppointmentItem = props => {
+const TransactionItem = props => {
   const {appointmentDetails, deleteHistoryItem} = props
   const {id, title, amount, type} = appointmentDetails
 
@@ -8,12 +8,15 @@ const AppointmentItem = props => {
     deleteHistoryItem(id)
   }
 
+  const typeColorClassName =
+    type === 'Income' ? 'income-color' : 'expense-color'
+
   return (
     <li className="history-item">
       <div className="transacItem-container">
         <p className="title-css">{title}</p>
         <p className="title-css-2">{amount}</p>
-        <p className="title-css-3">{type}</p>
+        <p className={`title-css-3 ${typeColorClassName}`}>{type}</p>
         <button
           type="button"
           className="delete-btn"
@@ -31,4 +34,4 @@ const AppointmentItem = props => {
   )
 }
 
-export default AppointmentItem
+export default TransactionItem

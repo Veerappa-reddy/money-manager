@@ -8,19 +8,24 @@ import TransactionItem from '../TransactionItem'
 
 import './index.css'
 
-// const transactionTypeOptions = [
-//   {
-//     optionId: 'INCOME',
-//     displayText: 'Income',
-//   },
-//   {
-//     optionId: 'EXPENSES',
-//     displayText: 'Expenses',
-//   },
-// ]
+const transactionTypeOptions = [
+  {
+    optionId: 'INCOME',
+    displayText: 'Income',
+  },
+  {
+    optionId: 'EXPENSES',
+    displayText: 'Expenses',
+  },
+]
 
 class MoneyManager extends Component {
-  state = {historyList: [], userTitle: '', userAmount: '', userType: ''}
+  state = {
+    historyList: [],
+    userTitle: '',
+    userAmount: '',
+    userType: transactionTypeOptions[0].displayText,
+  }
 
   onChangeTitle = event => {
     this.setState({userTitle: event.target.value})
@@ -41,7 +46,7 @@ class MoneyManager extends Component {
     const transaction = {
       id: v4(),
       title: userTitle,
-      amount: userAmount,
+      amount: parseInt(userAmount),
       type: userType,
     }
 
@@ -59,8 +64,57 @@ class MoneyManager extends Component {
     })
   }
 
+  expenseAmount = () => {
+    const {historyList} = this.state
+
+    let expenseAmount = 0
+
+    historyList.forEach(eachTransaction => {
+      if (eachTransaction.type !== transactionTypeOptions[0].displayText) {
+        expenseAmount += eachTransaction.amount
+      }
+    })
+
+    return expenseAmount
+  }
+
+  incomeAmount = () => {
+    const {historyList} = this.state
+
+    let incomeAmount = 0
+    historyList.forEach(eachTransaction => {
+      if (eachTransaction.type === transactionTypeOptions[0].displayText) {
+        incomeAmount += eachTransaction.amount
+      }
+    })
+
+    return incomeAmount
+  }
+
+  balanceAmount = () => {
+    const {historyList} = this.state
+    let balanceAmount = 0
+    let incomeAmount = 0
+    let expenseAmount = 0
+
+    historyList.forEach(eachTransaction => {
+      if (eachTransaction.type === transactionTypeOptions[0].displayText) {
+        incomeAmount += eachTransaction.amount
+      } else {
+        expenseAmount += eachTransaction.amount
+      }
+    })
+
+    balanceAmount = incomeAmount - expenseAmount
+
+    return balanceAmount
+  }
+
   render() {
     const {historyList, userType, userAmount, userTitle} = this.state
+    const balance = this.balanceAmount()
+    const income = this.incomeAmount()
+    const expense = this.expenseAmount()
 
     return (
       <div className="app-container">
@@ -71,7 +125,7 @@ class MoneyManager extends Component {
             <span className="money-manager-span">Money Manager</span>
           </p>
         </div>
-        <MoneyDetails />
+        <MoneyDetails balance={balance} income={income} expense={expense} />
         <div className="transaction-details-container">
           <div>
             <form
@@ -108,8 +162,11 @@ class MoneyManager extends Component {
                 onChange={this.onChangeType}
                 value={userType}
               >
-                <option>Income</option>
-                <option>Expenses</option>
+                {transactionTypeOptions.map(optionType => (
+                  <option key={optionType.optionId} value={optionType.optionId}>
+                    {optionType.displayText}
+                  </option>
+                ))}
               </select>
               <button type="submit" className="add-btn">
                 Add
